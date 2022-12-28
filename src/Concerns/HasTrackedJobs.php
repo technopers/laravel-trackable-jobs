@@ -13,27 +13,27 @@ trait HasTrackedJobs
         return $this->morphMany(TrackedJob::class, 'trackable');
     }
 
-    public function getFinishedJobs(): MorphMany
+    public function finishedJobs(): MorphMany
     {
         return $this->morphMany(TrackedJob::class, 'trackable')
             ->where('status', TrackedJobStatuses::STATUS_FINISHED);
     }
 
-    public function getRunningJobs(): MorphMany
+    public function failedJobs(): MorphMany
+    {
+        return $this->morphMany(TrackedJob::class, 'trackable')
+            ->where('status', TrackedJobStatuses::STATUS_FAILED);
+    }
+
+    public function runningJobs(): MorphMany
     {
         return $this->morphMany(TrackedJob::class, 'trackable')
             ->where('status', TrackedJobStatuses::STATUS_STARTED);
     }
 
-    public function getPendingJobs(): MorphMany
+    public function pendingJobs(): MorphMany
     {
         return $this->morphMany(TrackedJob::class, 'trackable')
             ->where('status', TrackedJobStatuses::STATUS_QUEUED);
-    }
-
-    public function getFailedJobs(): MorphMany
-    {
-        return $this->morphMany(TrackedJob::class, 'trackable')
-            ->where('status', TrackedJobStatuses::STATUS_FAILED);
     }
 }
