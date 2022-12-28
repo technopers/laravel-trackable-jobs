@@ -2,25 +2,21 @@
 
 namespace Technopers\LaravelTrackableJobs;
 
-use Illuminate\Support\ServiceProvider;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class LaravelTrackableJobsServiceProvider extends ServiceProvider
+class LaravelTrackableJobsServiceProvider extends PackageServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
-    public function boot()
+    public function configurePackage(Package $package): void
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'laravel-trackable-jobs');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-trackable-jobs');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
-
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__ . '/../config/trackable-jobs.php' => config_path('trackable-jobs.php')
-            ], 'trackable-jobs-configs');
-        }
-
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        /*
+          * This class is a Package Service Provider
+          *
+          * More info: https://github.com/spatie/laravel-package-tools
+          */
+        $package
+            ->name('trackable-jobs')
+            ->hasConfigFile('trackable-jobs')
+            ->hasMigration('create_skeleton_table');
     }
 }
