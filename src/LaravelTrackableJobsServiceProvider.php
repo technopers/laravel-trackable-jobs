@@ -11,19 +11,16 @@ class LaravelTrackableJobsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /*
-         * Optional methods to load your package assets
-         */
-
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'laravel-trackable-jobs');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-trackable-jobs');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php'
-            ]);
+                __DIR__ . '/../config/trackable-jobs.php' => config_path('trackable-jobs.php')
+            ], 'trackable-jobs-configs');
         }
+
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 }

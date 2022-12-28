@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.0",
         "illuminate/support": "^9.0"
     },
     "require-dev": {
@@ -44,10 +44,7 @@
         "laravel": {
             "providers": [
                 "Technopers\\LaravelTrackableJobs\\LaravelTrackableJobsServiceProvider"
-            ],
-            "aliases": {
-                "LaravelTrackableJobs": "Technopers\\LaravelTrackableJobs\\LaravelTrackableJobsFacade"
-            }
+            ]
         }
     }
 }
