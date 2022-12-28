@@ -11,6 +11,8 @@ trait Trackable
     public Model $model;
     public Builder|Model $trackedJob;
 
+    public ?string $name;
+
     /**
      * @param Model $model
      */
@@ -21,7 +23,7 @@ trait Trackable
         $this->trackedJob = ($trackable_model)::query()->create([
             'trackable_id' => $this->model->id,
             'trackable_type' => $this->model->getMorphClass(),
-            'name' => class_basename(static::class),
+            'name' => $this->name ?? class_basename(static::class),
         ]);
     }
 

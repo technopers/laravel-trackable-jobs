@@ -5,23 +5,10 @@ namespace Technopers\LaravelTrackableJobs\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Technopers\LaravelTrackableJobs\Contracts\TrackableJobContract;
+use Technopers\LaravelTrackableJobs\TrackedJobStatuses;
 
 class TrackedJob extends Model implements TrackableJobContract
 {
-    const STATUS_QUEUED = 'queued';
-    const STATUS_RETRYING = 'retrying';
-    const STATUS_STARTED = 'started';
-    const STATUS_FINISHED = 'finished';
-    const STATUS_FAILED = 'failed';
-
-    const STATUSES = [
-        self::STATUS_QUEUED,
-        self::STATUS_RETRYING,
-        self::STATUS_STARTED,
-        self::STATUS_FINISHED,
-        self::STATUS_FAILED,
-    ];
-
     protected $fillable = [
         'trackable_id',
         'trackable_type',
@@ -51,7 +38,7 @@ class TrackedJob extends Model implements TrackableJobContract
     public function markAsStarted(): bool
     {
         return $this->update([
-            'status' => static::STATUS_STARTED,
+            'status' => TrackedJobStatuses::STATUS_STARTED,
             'started_at' => now(),
         ]);
     }
@@ -59,14 +46,14 @@ class TrackedJob extends Model implements TrackableJobContract
     public function markAsQueued(): bool
     {
         return $this->update([
-            'status' => static::STATUS_QUEUED,
+            'status' => TrackedJobStatuses::STATUS_QUEUED,
         ]);
     }
 
     public function markAsRetrying(): bool
     {
         return $this->update([
-            'status' => static::STATUS_RETRYING,
+            'status' => TrackedJobStatuses::STATUS_RETRYING,
         ]);
     }
 
@@ -77,7 +64,7 @@ class TrackedJob extends Model implements TrackableJobContract
         }
 
         return $this->update([
-            'status' => static::STATUS_FINISHED,
+            'status' => TrackedJobStatuses::STATUS_FINISHED,
             'finished_at' => now(),
         ]);
     }
@@ -89,7 +76,7 @@ class TrackedJob extends Model implements TrackableJobContract
         }
 
         return $this->update([
-            'status' => static::STATUS_FAILED,
+            'status' => TrackedJobStatuses::STATUS_FAILED,
             'finished_at' => now(),
         ]);
     }
