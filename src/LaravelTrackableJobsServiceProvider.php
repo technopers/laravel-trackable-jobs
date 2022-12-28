@@ -17,6 +17,6 @@ class LaravelTrackableJobsServiceProvider extends PackageServiceProvider
         $package
             ->name('trackable-jobs')
             ->hasConfigFile('trackable-jobs')
-            ->hasMigration('create_skeleton_table');
+            ->hasMigration('create_tracked_jobs_table');
     }
 }
