@@ -4,6 +4,7 @@ namespace Technopers\LaravelTrackableJobs\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Technopers\LaravelTrackableJobs\Contracts\TrackableJobCallbacks;
 use Technopers\LaravelTrackableJobs\Jobs\Middleware\TrackedJobMiddleware;
 
 trait Trackable
@@ -25,6 +26,9 @@ trait Trackable
             'trackable_type' => $this->model->getMorphClass(),
             'name' => $this->name ?? class_basename(static::class),
         ]);
+        if ($this instanceof TrackableJobCallbacks) {
+            $this->queued();
+        }
     }
 
     public function middleware(): array
