@@ -1,10 +1,10 @@
-# Very short description of the package
+# Laravel Trackable Jobs
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/technopers/laravel-trackable-jobs.svg?style=flat-square)](https://packagist.org/packages/technopers/laravel-trackable-jobs)
 [![Total Downloads](https://img.shields.io/packagist/dt/technopers/laravel-trackable-jobs.svg?style=flat-square)](https://packagist.org/packages/technopers/laravel-trackable-jobs)
 ![GitHub Actions](https://github.com/technopers/laravel-trackable-jobs/actions/workflows/main.yml/badge.svg)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+Laravel trackable jobs is simple yet affective library for tracking background processes by Model entry (row).
 
 ## Installation
 
@@ -16,14 +16,132 @@ composer require technopers/laravel-trackable-jobs
 
 ## Usage
 
+You have a process called compress user profile picture. Which is related to specific user. So
+your job will be
+
 ```php
-// Usage description here
+class CompressUserProfilePicture {
+    
+}
+``` 
+
+This job can easily be tracked by each user, You can have status of this process, What you need to do is that.
+
+### Just add trait called "Trackable" and pass model object
+
+```php
+class CompressUserProfilePicture 
+{
+    use Trackable {
+        Trackable::__construct as __trackableConstruct;
+    };
+    
+    public $user;
+    
+    public function __construct($user)
+    {
+        $this->user = $user;
+        $this->__trackableConstruct($user);
+    }
+}
 ```
 
-### Testing
+### Find processes by user
 
-```bash
-composer test
+#### Get processes by User
+
+For that add, Just add trait called "HasTrackedJobs"
+
+```php
+use HasTrackedJobs;
+```
+
+It will add relations and give you finding methods like,
+
+```php
+public function trackedJobs(): MorphMany
+{
+    return $this->morphMany(TrackedJob::class, 'trackable');
+}
+
+public function finishedJobs(): MorphMany
+{
+    return $this->morphMany(TrackedJob::class, 'trackable')
+        ->where('status', TrackedJobStatuses::STATUS_FINISHED);
+}
+
+public function failedJobs(): MorphMany
+{
+    return $this->morphMany(TrackedJob::class, 'trackable')
+        ->where('status', TrackedJobStatuses::STATUS_FAILED);
+}
+
+public function runningJobs(): MorphMany
+{
+    return $this->morphMany(TrackedJob::class, 'trackable')
+        ->where('status', TrackedJobStatuses::STATUS_STARTED);
+}
+
+public function pendingJobs(): MorphMany
+{
+    return $this->morphMany(TrackedJob::class, 'trackable')
+        ->where('status', TrackedJobStatuses::STATUS_QUEUED);
+}
+```
+
+#### Also, if you have single job by each model
+
+For that add, Just add trait called **"HasTrackedJob"** not "HasTrackedJobs"
+
+```php
+use HasTrackedJob;
+```
+
+Which has methods like,
+
+```php
+public function trackedJob(): MorphOne
+{
+    return $this->morphOne(TrackedJob::class, 'trackable');
+}
+
+public function finishedJobs(): MorphOne
+{
+    return $this->morphOne(TrackedJob::class, 'trackable')
+        ->where('status', TrackedJobStatuses::STATUS_FINISHED);
+}
+
+public function failedJobs(): MorphOne
+{
+    return $this->morphOne(TrackedJob::class, 'trackable')
+        ->where('status', TrackedJobStatuses::STATUS_FAILED);
+}
+
+public function runningJobs(): MorphOne
+{
+    return $this->morphOne(TrackedJob::class, 'trackable')
+        ->where('status', TrackedJobStatuses::STATUS_STARTED);
+}
+
+public function pendingJobs(): MorphOne
+{
+    return $this->morphOne(TrackedJob::class, 'trackable')
+        ->where('status', TrackedJobStatuses::STATUS_QUEUED);
+}
+```
+
+## Usage
+
+### Fetch processes
+
+```php
+$userProcesses = $user->trackedJob()->get();
+```
+
+or
+
+```php
+$userProcesses = $user->trackedJob;
 ```
 
 ### Changelog
@@ -46,7 +164,3 @@ If you discover any security related issues, please email hardik@technopers.com 
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
